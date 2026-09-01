@@ -189,6 +189,10 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .explore-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .pillars-badges-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -262,6 +266,11 @@
 
   /* Services Grid on Mobile */
   .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Explore Grid on Mobile */
+  .explore-grid {
     grid-template-columns: 1fr;
   }
 
