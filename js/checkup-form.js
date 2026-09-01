@@ -5,8 +5,7 @@
  */
 
 // Production Google Apps Script Web App Endpoint
-// Note: Users can deploy Code.gs in Google Sheets and paste their URL here.
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_REPLACE_WITH_YOUR_DEPLOYED_URL/exec";
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJl2PzOy2lLW1ErEfwiqVgHmT_L5-IWz_JJq75gxh7yyu4xAhkxboO77QAxU8sGMJi/exec";
 
 // Master State for Checkup Assessment
 const checkupState = {
@@ -282,101 +281,54 @@ function initFormSubmission() {
     const submissionId = generateSubmissionId();
     checkupState.submissionId = submissionId;
 
-    // Gather Complete Assessment Payload
+    // Gather Complete Assessment Payload matching user Google Apps Script schema
     const payload = {
-      submissionId: submissionId,
-      timestamp: new Date().toISOString(),
-      formattedDate: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-      
-      // Step 1: Personal
+      // Personal Details
       fullName: document.getElementById('fullName').value.trim(),
       dob: document.getElementById('dob').value.trim() || 'N/A',
       occupation: document.getElementById('occupation').value.trim() || 'N/A',
+      mobile: document.getElementById('mobileNumber').value.trim(),
+      whatsapp: document.getElementById('whatsappNumber').value.trim() || document.getElementById('mobileNumber').value.trim(),
+      email: document.getElementById('emailAddress').value.trim() || 'N/A',
+      familyMembers: document.getElementById('familyMembers').value || '1',
+
+      // Financial Numbers
+      monthlyIncome: document.getElementById('monthlyIncome').value.trim() || '0',
+      monthlyExpenses: document.getElementById('monthlyExpenses').value.trim() || '0',
+      existingLoans: document.getElementById('loansEmi').value.trim() || '0',
+      currentSavings: document.getElementById('currentSavings').value.trim() || '0',
+      existingInvestments: document.getElementById('existingInvestments').value.trim() || '0',
+
+      // 12 Assessment Categories Status
+      incomeProtection: document.getElementById('status_income_protection')?.value.trim() || 'Needs Planning',
+      emergencyFund: document.getElementById('status_emergency_fund')?.value.trim() || 'Needs Planning',
+      healthInsurance: document.getElementById('status_health_insurance')?.value.trim() || 'Needs Planning',
+      disabilityInsurance: document.getElementById('status_disability_insurance')?.value.trim() || 'Needs Planning',
+      childEducation: document.getElementById('status_child_education')?.value.trim() || 'Needs Planning',
+      marriageFund: document.getElementById('status_marriage_fund')?.value.trim() || 'Needs Planning',
+      retirement: document.getElementById('status_retirement_goals')?.value.trim() || 'Needs Planning',
+      spouseCoverage: document.getElementById('status_spouse_coverage')?.value.trim() || 'Needs Planning',
+      homeLoanRent: document.getElementById('status_home_loan_rent')?.value.trim() || 'Needs Planning',
+      debtManagement: document.getElementById('status_debt_management')?.value.trim() || 'Needs Planning',
+      estatePlanning: document.getElementById('status_estate_planning')?.value.trim() || 'Needs Planning',
+      wealthBuilding: document.getElementById('status_wealth_building')?.value.trim() || 'Needs Planning',
+
+      // Financial Goals & Preferences
+      financialGoals: checkupState.selectedGoals.length ? checkupState.selectedGoals.join(', ') : 'Comprehensive Financial Planning',
+      customerConcern: document.getElementById('customerConcern').value.trim() || 'Need better financial planning',
+      preferredContactTime: document.getElementById('preferredContactTime').value || 'Anytime',
+      consent: 'Yes',
+
+      // Extended metadata
+      submissionId: submissionId,
+      timestamp: new Date().toISOString(),
+      formattedDate: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
       mobileNumber: document.getElementById('mobileNumber').value.trim(),
       whatsappNumber: document.getElementById('whatsappNumber').value.trim() || document.getElementById('mobileNumber').value.trim(),
       emailAddress: document.getElementById('emailAddress').value.trim() || 'N/A',
-      familyMembers: document.getElementById('familyMembers').value || '1',
-
-      // Step 2: Financial Info
-      monthlyIncome: document.getElementById('monthlyIncome').value.trim() || 'N/A',
-      monthlyExpenses: document.getElementById('monthlyExpenses').value.trim() || 'N/A',
-      loansEmi: document.getElementById('loansEmi').value.trim() || 'N/A',
-      currentSavings: document.getElementById('currentSavings').value.trim() || 'N/A',
-      existingInvestments: document.getElementById('existingInvestments').value.trim() || 'N/A',
-
-      // Step 3: 12 Assessment Categories (Status, Score, Comments)
-      assessment: {
-        incomeProtection: {
-          status: document.getElementById('status_income_protection')?.value.trim() || 'N/A',
-          score: checkupState.scores.income_protection,
-          comments: document.getElementById('comm_income_protection')?.value.trim() || ''
-        },
-        emergencyFund: {
-          status: document.getElementById('status_emergency_fund')?.value.trim() || 'N/A',
-          score: checkupState.scores.emergency_fund,
-          comments: document.getElementById('comm_emergency_fund')?.value.trim() || ''
-        },
-        healthInsurance: {
-          status: document.getElementById('status_health_insurance')?.value.trim() || 'N/A',
-          score: checkupState.scores.health_insurance,
-          comments: document.getElementById('comm_health_insurance')?.value.trim() || ''
-        },
-        disabilityInsurance: {
-          status: document.getElementById('status_disability_insurance')?.value.trim() || 'N/A',
-          score: checkupState.scores.disability_insurance,
-          comments: document.getElementById('comm_disability_insurance')?.value.trim() || ''
-        },
-        childEducation: {
-          status: document.getElementById('status_child_education')?.value.trim() || 'N/A',
-          score: checkupState.scores.child_education,
-          comments: document.getElementById('comm_child_education')?.value.trim() || ''
-        },
-        marriageFund: {
-          status: document.getElementById('status_marriage_fund')?.value.trim() || 'N/A',
-          score: checkupState.scores.marriage_fund,
-          comments: document.getElementById('comm_marriage_fund')?.value.trim() || ''
-        },
-        retirementGoals: {
-          status: document.getElementById('status_retirement_goals')?.value.trim() || 'N/A',
-          score: checkupState.scores.retirement_goals,
-          comments: document.getElementById('comm_retirement_goals')?.value.trim() || ''
-        },
-        spouseCoverage: {
-          status: document.getElementById('status_spouse_coverage')?.value.trim() || 'N/A',
-          score: checkupState.scores.spouse_coverage,
-          comments: document.getElementById('comm_spouse_coverage')?.value.trim() || ''
-        },
-        homeLoanRent: {
-          status: document.getElementById('status_home_loan_rent')?.value.trim() || 'N/A',
-          score: checkupState.scores.home_loan_rent,
-          comments: document.getElementById('comm_home_loan_rent')?.value.trim() || ''
-        },
-        debtManagement: {
-          status: document.getElementById('status_debt_management')?.value.trim() || 'N/A',
-          score: checkupState.scores.debt_management,
-          comments: document.getElementById('comm_debt_management')?.value.trim() || ''
-        },
-        estatePlanning: {
-          status: document.getElementById('status_estate_planning')?.value.trim() || 'N/A',
-          score: checkupState.scores.estate_planning,
-          comments: document.getElementById('comm_estate_planning')?.value.trim() || ''
-        },
-        wealthBuilding: {
-          status: document.getElementById('status_wealth_building')?.value.trim() || 'N/A',
-          score: checkupState.scores.wealth_building,
-          comments: document.getElementById('comm_wealth_building')?.value.trim() || ''
-        }
-      },
-
-      // Step 4: Goals
-      financialGoals: checkupState.selectedGoals.length ? checkupState.selectedGoals.join(', ') : 'Comprehensive Financial Planning',
-
-      // Step 5: Preferences & Consent
-      customerConcern: document.getElementById('customerConcern').value.trim() || 'General Portfolio Review',
-      preferredContactTime: document.getElementById('preferredContactTime').value || 'Anytime',
-      additionalMessage: document.getElementById('additionalMessage').value.trim() || 'None',
-      consentAgreed: true,
-      overallScorePercentage: document.getElementById('liveScoreDigits')?.textContent || '50%'
+      loansEmi: document.getElementById('loansEmi').value.trim() || '0',
+      overallScorePercentage: document.getElementById('liveScoreDigits')?.textContent || '50%',
+      scores: { ...checkupState.scores }
     };
 
     // Save locally as reliable fallback
@@ -388,12 +340,12 @@ function initFormSubmission() {
       console.warn('LocalStorage save skipped:', err);
     }
 
-    // Submit to Google Apps Script Web App Endpoint if configured
-    if (GOOGLE_APPS_SCRIPT_URL && !GOOGLE_APPS_SCRIPT_URL.includes('REPLACE_WITH_YOUR_DEPLOYED_URL')) {
+    // Submit to Google Apps Script Web App Endpoint
+    if (GOOGLE_APPS_SCRIPT_URL) {
       try {
         await fetch(GOOGLE_APPS_SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors', // Standard for Google Apps Script Web Apps
+          mode: 'no-cors', // Essential for Google Apps Script Web Apps to prevent CORS blockage
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });

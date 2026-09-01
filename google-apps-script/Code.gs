@@ -3,16 +3,15 @@
  * ND & ASSOCIATES - GOOGLE APPS SCRIPT WEB APP FOR FINANCIAL HEALTH CHECKUP
  * ============================================================================
  * 
- * Instructions:
+ * Deployment Instructions:
  * 1. Open Google Sheets (create a new sheet named "ND Associates Leads").
  * 2. Click Extensions > Apps Script.
  * 3. Replace all existing code in Apps Script with this entire file.
- * 4. Click "Deploy" > "New deployment".
+ * 4. Click "Deploy" > "New deployment" (or "Manage deployments" > "Edit" > "New version").
  * 5. Select type: "Web app".
- * 6. Set Description: "ND Checkup Form Endpoint".
- * 7. Set "Execute as": "Me".
- * 8. Set "Who has access": "Anyone" (allows website form submission without login).
- * 9. Click "Deploy", copy the Web App URL, and paste it into `js/checkup-form.js` in `GOOGLE_APPS_SCRIPT_URL`.
+ * 6. Set "Execute as": "Me".
+ * 7. Set "Who has access": "Anyone" (Crucial: allows website submissions without login).
+ * 8. Click "Deploy", copy the Web App URL.
  */
 
 // Email to receive instant alerts when a new client submits a checkup
@@ -40,35 +39,36 @@ function doPost(e) {
     const fullName = postData.fullName || "";
     const dob = postData.dob || "";
     const occupation = postData.occupation || "";
-    const mobileNumber = postData.mobileNumber || "";
-    const whatsappNumber = postData.whatsappNumber || "";
-    const emailAddress = postData.emailAddress || "";
+    const mobile = postData.mobile || postData.mobileNumber || "";
+    const whatsapp = postData.whatsapp || postData.whatsappNumber || mobile;
+    const email = postData.email || postData.emailAddress || "";
     const familyMembers = postData.familyMembers || "";
     const monthlyIncome = postData.monthlyIncome || "";
     const monthlyExpenses = postData.monthlyExpenses || "";
-    const loansEmi = postData.loansEmi || "";
+    const existingLoans = postData.existingLoans || postData.loansEmi || "";
     const currentSavings = postData.currentSavings || "";
     const existingInvestments = postData.existingInvestments || "";
     const overallScore = postData.overallScorePercentage || "";
     const financialGoals = postData.financialGoals || "";
     const customerConcern = postData.customerConcern || "";
     const preferredTime = postData.preferredContactTime || "";
-    const additionalMsg = postData.additionalMessage || "";
+    const additionalMsg = postData.additionalMessage || "None";
+    const consent = postData.consent || "Yes";
     
-    // Assessment Categories
+    // Assessment Categories (support both string status and assessment object)
     const a = postData.assessment || {};
-    const incProt = formatCategory(a.incomeProtection);
-    const emgFund = formatCategory(a.emergencyFund);
-    const hlthIns = formatCategory(a.healthInsurance);
-    const disIns  = formatCategory(a.disabilityInsurance);
-    const chldEd  = formatCategory(a.childEducation);
-    const mrgFnd  = formatCategory(a.marriageFund);
-    const retGls  = formatCategory(a.retirementGoals);
-    const spsCov  = formatCategory(a.spouseCoverage);
-    const hmLoan  = formatCategory(a.homeLoanRent);
-    const dbtMgmt = formatCategory(a.debtManagement);
-    const estPln  = formatCategory(a.estatePlanning);
-    const wlthBld = formatCategory(a.wealthBuilding);
+    const incProt = postData.incomeProtection || formatCategory(a.incomeProtection);
+    const emgFund = postData.emergencyFund || formatCategory(a.emergencyFund);
+    const hlthIns = postData.healthInsurance || formatCategory(a.healthInsurance);
+    const disIns  = postData.disabilityInsurance || formatCategory(a.disabilityInsurance);
+    const chldEd  = postData.childEducation || formatCategory(a.childEducation);
+    const mrgFnd  = postData.marriageFund || formatCategory(a.marriageFund);
+    const retGls  = postData.retirement || formatCategory(a.retirementGoals);
+    const spsCov  = postData.spouseCoverage || formatCategory(a.spouseCoverage);
+    const hmLoan  = postData.homeLoanRent || formatCategory(a.homeLoanRent);
+    const dbtMgmt = postData.debtManagement || formatCategory(a.debtManagement);
+    const estPln  = postData.estatePlanning || formatCategory(a.estatePlanning);
+    const wlthBld = postData.wealthBuilding || formatCategory(a.wealthBuilding);
 
     const rowData = [
       timestamp,
@@ -76,13 +76,13 @@ function doPost(e) {
       fullName,
       dob,
       occupation,
-      mobileNumber,
-      whatsappNumber,
-      emailAddress,
+      mobile,
+      whatsapp,
+      email,
       familyMembers,
       monthlyIncome,
       monthlyExpenses,
-      loansEmi,
+      existingLoans,
       currentSavings,
       existingInvestments,
       overallScore,
@@ -102,7 +102,7 @@ function doPost(e) {
       customerConcern,
       preferredTime,
       additionalMsg,
-      "Agreed"
+      consent
     ];
 
     sheet.appendRow(rowData);
@@ -120,8 +120,10 @@ function doPost(e) {
               <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Submission ID:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submissionId}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Name:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${fullName}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Mobile:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="tel:${mobileNumber}">${mobileNumber}</a></td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>WhatsApp:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="https://wa.me/91${mobileNumber.replace(/[^0-9]/g, '').slice(-10)}">Chat on WhatsApp</a></td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Mobile:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="tel:${mobile}">${mobile}</a></td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>WhatsApp:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="https://wa.me/91${mobile.replace(/[^0-9]/g, '').slice(-10)}">Chat on WhatsApp</a></td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Monthly Income:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">₹ ${monthlyIncome}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Monthly Expenses:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">₹ ${monthlyExpenses}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Overall Score:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${overallScore}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Goals:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${financialGoals}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Preferred Time:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${preferredTime}</td></tr>
@@ -148,10 +150,11 @@ function doPost(e) {
 }
 
 function formatCategory(item) {
-  if (!item) return "N/A";
-  let str = `Score: ${item.score || 0}/5`;
-  if (item.status && item.status !== "N/A") str += ` | Status: ${item.status}`;
-  if (item.comments) str += ` | Note: ${item.comments}`;
+  if (!item) return "Needs Planning";
+  if (typeof item === "string") return item;
+  let str = item.status || "Needs Planning";
+  if (item.score) str += ` (${item.score}/5)`;
+  if (item.comments) str += ` - ${item.comments}`;
   return str;
 }
 
@@ -168,25 +171,25 @@ function setupSheetHeaders(sheet) {
     "Family Members",
     "Monthly Income",
     "Monthly Expenses",
-    "Loans / EMI",
+    "Existing Loans",
     "Current Savings",
     "Existing Investments",
-    "Overall Fitness Score",
-    "1. Income Protection (20x)",
-    "2. Emergency Fund (3-6x)",
-    "3. Health Insurance (8-10x)",
-    "4. Disability Insurance",
-    "5. Child Education Fund",
-    "6. Marriage Fund",
-    "7. Retirement Goals (300x)",
-    "8. Spouse Coverage",
-    "9. Home Loan / Rent (≤30%)",
-    "10. Debt Management (≤40%)",
-    "11. Estate Planning (Will/Nomination)",
-    "12. Wealth Building (≥20% Savings)",
+    "Overall Score",
+    "Income Protection",
+    "Emergency Fund",
+    "Health Insurance",
+    "Disability Insurance",
+    "Child Education",
+    "Marriage Fund",
+    "Retirement",
+    "Spouse Coverage",
+    "Home Loan / Rent",
+    "Debt Management",
+    "Estate Planning",
+    "Wealth Building",
     "Financial Goals",
     "Customer Concern",
-    "Preferred Contact Time",
+    "Preferred Time",
     "Additional Message",
     "Consent"
   ];
