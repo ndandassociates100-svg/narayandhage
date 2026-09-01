@@ -1,6 +1,6 @@
 /* ==========================================================================
-   ND & ASSOCIATES - RESPONSIVE STYLES
-   Mobile, Tablet, Desktop & Print Optimization
+   ND & ASSOCIATES - MASTER RESPONSIVE STYLESHEET
+   Mobile, Tablet, Desktop, Ultra-Wide & Accessibility Optimization
    ========================================================================== */
 
 /* Mobile Sticky Bottom Floating Action Bar */
@@ -10,33 +10,38 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(4, 13, 26, 0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(4, 13, 26, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-top: 1.5px solid rgba(212, 175, 55, 0.4);
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.85rem;
+  padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
   z-index: 999;
-  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
 }
 
 .mobile-sticky-inner {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .mobile-sticky-btn {
   flex: 1;
-  padding: 0.75rem 0.5rem;
-  font-size: 0.85rem;
+  padding: 0.65rem 0.4rem;
+  font-size: 0.8125rem;
+  min-height: 44px;
   border-radius: var(--radius-md);
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   text-align: center;
+  white-space: nowrap;
 }
 
 /* Off-Canvas Mobile Navigation Drawer */
@@ -46,8 +51,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 1999;
   opacity: 0;
   visibility: hidden;
@@ -63,17 +69,19 @@
   position: fixed;
   top: 0;
   right: -320px;
-  width: 300px;
+  width: min(300px, 85vw);
   height: 100%;
   background: var(--navy-950);
   border-left: 1.5px solid rgba(212, 175, 55, 0.3);
   z-index: 2000;
   display: flex;
   flex-direction: column;
-  padding: 2rem 1.5rem;
+  padding: 1.75rem 1.25rem;
+  padding-bottom: max(1.75rem, env(safe-area-inset-bottom));
   transition: right var(--transition-smooth);
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-drawer.active {
@@ -84,59 +92,63 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .drawer-close-btn {
   color: var(--gold-400);
-  font-size: 1.5rem;
-  width: 36px;
-  height: 36px;
+  font-size: 1.75rem;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.05);
+  line-height: 1;
 }
 
 .drawer-nav-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .drawer-nav-link {
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #e2e8f0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  transition: color var(--transition-fast);
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
 }
 
 .drawer-nav-link:hover, .drawer-nav-link.active {
   color: var(--gold-300);
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .drawer-footer {
   margin-top: auto;
-  padding-top: 1.5rem;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* ==========================================================================
-   Breakpoints
+   Breakpoints & Responsive Layout Queries
    ========================================================================== */
 
-/* Large Tablets and Below (1024px) */
+/* Large Tablets & Small Laptops (<= 1024px) */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -146,10 +158,6 @@
 
   .hero-content {
     align-items: center;
-  }
-
-  .hero-headline {
-    font-size: 2.75rem;
   }
 
   .hero-intro-box {
@@ -173,7 +181,7 @@
   }
 
   .about-image-card {
-    max-width: 480px;
+    max-width: 440px;
     margin: 0 auto;
   }
 
@@ -209,10 +217,10 @@
   }
 }
 
-/* Medium Tablets & Mobile Devices (768px) */
+/* Medium Tablets & Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 70px; /* Space for mobile sticky bottom bar */
+    padding-bottom: 74px; /* Space for mobile sticky bottom bar */
   }
 
   .mobile-sticky-bar {
@@ -231,26 +239,11 @@
     display: flex;
   }
 
-  .section-title {
-    font-size: 1.85rem;
-  }
-
-  .hero-section {
-    padding: 3.5rem 0 4.5rem 0;
-  }
-
-  .hero-headline {
-    font-size: 2.25rem;
-  }
-
-  .hero-subheadline {
-    font-size: 1.05rem;
-  }
-
+  /* Stats Section on Mobile */
   .stats-card-container {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 2rem 1.5rem;
+    padding: 1.75rem 1.25rem;
   }
 
   .stat-box:not(:last-child)::after {
@@ -259,7 +252,7 @@
 
   .stat-box {
     border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    padding-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
   }
 
   .stat-box:last-child {
@@ -267,22 +260,22 @@
     padding-bottom: 0;
   }
 
+  /* Services Grid on Mobile */
   .services-grid {
     grid-template-columns: 1fr;
   }
 
+  /* Why Choose Us Grid */
   .why-us-grid {
     grid-template-columns: 1fr;
   }
 
+  /* About Pillars Grid */
   .about-pillars-grid {
     grid-template-columns: 1fr;
   }
 
-  .wizard-form-body {
-    padding: 2rem 1.25rem;
-  }
-
+  /* Checkup 12-Card Form Inputs */
   .assessment-card-inputs {
     grid-template-columns: 1fr;
   }
@@ -290,54 +283,80 @@
   .assessment-card-top {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .assessment-score-picker {
     width: 100%;
     justify-content: space-between;
-    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .form-row {
     grid-template-columns: 1fr;
+    gap: 0;
   }
 
   .contact-actions-row {
     grid-template-columns: 1fr;
   }
 
+  /* Floating badges positioning for tablet/mobile */
   .floating-badge.badge-top {
-    top: -10px;
-    right: -10px;
+    top: -8px;
+    right: 0;
   }
 
   .floating-badge.badge-bottom {
-    bottom: 10px;
-    left: -10px;
+    bottom: 15px;
+    left: 0;
   }
 
+  /* Stepper labels hidden on compact view */
   .wizard-steps .step-title-lbl {
-    display: none; /* Hide labels on mobile stepper to keep it compact */
+    display: none;
   }
 
   .wizard-steps::before, .wizard-progress-fill {
-    left: 20px;
-    right: 20px;
+    left: 15px;
+    right: 15px;
+  }
+
+  /* Calculator Tabs Scroll on Mobile */
+  .calc-tabs-nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .calc-tabs-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .footer-top-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
   }
 }
 
-/* Small Phones (480px) */
+/* Small Smart Phones (<= 480px) */
 @media (max-width: 480px) {
-  .hero-headline {
-    font-size: 1.95rem;
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
   }
 
-  .stat-number {
-    font-size: 2.35rem;
+  .hero-cta-group .btn {
+    width: 100%;
   }
 
   .pillars-badges-grid {
@@ -348,19 +367,87 @@
     grid-template-columns: 1fr;
   }
 
-  .calc-card-container {
-    padding: 1.5rem 1.25rem;
+  .wizard-nav-actions {
+    flex-direction: column-reverse;
+    width: 100%;
   }
 
-  .success-modal-card {
-    padding: 2.5rem 1.5rem;
+  .wizard-nav-actions .btn {
+    width: 100%;
   }
 
-  .success-title {
-    font-size: 1.75rem;
+  .live-score-gauge-bar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .submission-id-number {
-    font-size: 1.4rem;
+  .gauge-meter-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .gauge-progress-outer {
+    flex: 1;
+    width: auto;
+  }
+
+  .floating-badge {
+    position: static;
+    margin: 0.5rem 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-visual .portrait-frame {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .experience-stamp {
+    position: static;
+    margin-top: 1rem;
+    max-width: 100%;
+  }
+
+  .success-actions-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .success-actions-row .btn {
+    width: 100%;
+  }
+}
+
+/* Extra Small Screens (<= 360px) */
+@media (max-width: 360px) {
+  .brand-tagline {
+    display: none;
+  }
+
+  .score-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Print Optimization */
+@media print {
+  .top-bar, .site-header, .mobile-sticky-bar, .calculators-section, .wizard-nav-actions, .hamburger-btn {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+    padding-bottom: 0;
+  }
+  .hero-section, .stats-section, .checkup-section, .why-us-section, .site-footer {
+    background: none !important;
+    color: #000 !important;
+  }
+  .section-title, .stat-number, .service-title {
+    color: #000 !important;
   }
 }
