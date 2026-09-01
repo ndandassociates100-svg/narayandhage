@@ -1,6 +1,6 @@
 /**
  * ND & ASSOCIATES - Interactive Financial Calculators
- * Implements 4 key Indian financial advisory rule-of-thumb calculators
+ * Implements 5 key Indian financial advisory rule-of-thumb & loan calculators
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRetirementCalculator();
   initEmergencyCalculator();
   initSIPCalculator();
+  initHomeLoanCalculator();
 });
 
 /* Tab Switching Logic */
@@ -99,13 +100,12 @@ function initRetirementCalculator() {
     expenseVal.textContent = '₹ ' + expense.toLocaleString('en-IN') + ' / mo';
     currentAgeVal.textContent = age + ' Years';
 
-    // 300x Monthly Expense Rule from Narayan Dhage's campaign matrix
-    const recommendedCorpus = expense * 300;
-    const yearsToRetire = Math.max(1, 60 - age);
+    // 300x Monthly Expenses Rule (or 25x Annual Expenses Rule)
+    const corpusTarget = expense * 300;
 
-    if (resultAmount) resultAmount.textContent = formatINR(recommendedCorpus);
-    if (monthlyExpenseResult) monthlyExpenseResult.textContent = formatINR(expense * 12) + ' / yr';
-    if (ruleMultiplier) ruleMultiplier.textContent = `${yearsToRetire} Yrs to 60 (300× Rule)`;
+    if (resultAmount) resultAmount.textContent = formatINR(corpusTarget);
+    if (monthlyExpenseResult) monthlyExpenseResult.textContent = '₹ ' + expense.toLocaleString('en-IN');
+    if (ruleMultiplier) ruleMultiplier.textContent = formatINR(corpusTarget);
   }
 
   expenseSlider.addEventListener('input', calculate);
@@ -113,40 +113,34 @@ function initRetirementCalculator() {
   calculate();
 }
 
-/* 3. Emergency Liquid Fund - 3-6x Expense Rule */
+/* 3. Emergency Reserve Fund (3-6x Monthly Expenses Rule) */
 function initEmergencyCalculator() {
-  const expSlider = document.getElementById('emgExpSlider');
-  const expVal = document.getElementById('emgExpVal');
-  const emiSlider = document.getElementById('emgEmiSlider');
-  const emiVal = document.getElementById('emgEmiVal');
+  const expenseSlider = document.getElementById('emgExpenseSlider');
+  const expenseVal = document.getElementById('emgExpenseVal');
   const monthsSlider = document.getElementById('emgMonthsSlider');
   const monthsVal = document.getElementById('emgMonthsVal');
 
   const resultAmount = document.getElementById('emgResultAmount');
-  const minTarget = document.getElementById('emgMinTarget');
-  const idealTarget = document.getElementById('emgIdealTarget');
+  const monthlyDisplay = document.getElementById('emgMonthlyDisplay');
+  const durationDisplay = document.getElementById('emgDurationDisplay');
 
-  if (!expSlider) return;
+  if (!expenseSlider) return;
 
   function calculate() {
-    const exp = parseInt(expSlider.value, 10);
-    const emi = parseInt(emiSlider.value, 10);
+    const expense = parseInt(expenseSlider.value, 10);
     const months = parseInt(monthsSlider.value, 10);
 
-    expVal.textContent = '₹ ' + exp.toLocaleString('en-IN');
-    emiVal.textContent = '₹ ' + emi.toLocaleString('en-IN');
-    monthsVal.textContent = months + ' Months';
+    expenseVal.textContent = '₹ ' + expense.toLocaleString('en-IN') + ' / mo';
+    monthsVal.textContent = months + ' Months Buffer';
 
-    const monthlyTotal = exp + emi;
-    const totalRequired = monthlyTotal * months;
+    const emergencyFundNeed = expense * months;
 
-    if (resultAmount) resultAmount.textContent = formatINR(totalRequired);
-    if (minTarget) minTarget.textContent = formatINR(monthlyTotal * 3);
-    if (idealTarget) idealTarget.textContent = formatINR(monthlyTotal * 6);
+    if (resultAmount) resultAmount.textContent = formatINR(emergencyFundNeed);
+    if (monthlyDisplay) monthlyDisplay.textContent = '₹ ' + expense.toLocaleString('en-IN');
+    if (durationDisplay) durationDisplay.textContent = months + ' Months';
   }
 
-  expSlider.addEventListener('input', calculate);
-  emiSlider.addEventListener('input', calculate);
+  expenseSlider.addEventListener('input', calculate);
   monthsSlider.addEventListener('input', calculate);
   calculate();
 }
@@ -191,5 +185,50 @@ function initSIPCalculator() {
   sipAmountSlider.addEventListener('input', calculate);
   sipRateSlider.addEventListener('input', calculate);
   sipTenureSlider.addEventListener('input', calculate);
+  calculate();
+}
+
+/* 5. Home Loan EMI Calculator (LIC HFL & Indian Mortgage Standards) */
+function initHomeLoanCalculator() {
+  const amountSlider = document.getElementById('homeLoanAmountSlider');
+  const amountVal = document.getElementById('homeLoanAmountVal');
+  const rateSlider = document.getElementById('homeLoanRateSlider');
+  const rateVal = document.getElementById('homeLoanRateVal');
+  const tenureSlider = document.getElementById('homeLoanTenureSlider');
+  const tenureVal = document.getElementById('homeLoanTenureVal');
+
+  const resultEmi = document.getElementById('homeLoanResultEmi');
+  const principalAmountEl = document.getElementById('homeLoanPrincipalAmount');
+  const totalInterestEl = document.getElementById('homeLoanTotalInterest');
+  const totalPayableEl = document.getElementById('homeLoanTotalPayable');
+
+  if (!amountSlider) return;
+
+  function calculate() {
+    const P = parseInt(amountSlider.value, 10);
+    const annualRate = parseFloat(rateSlider.value);
+    const years = parseInt(tenureSlider.value, 10);
+
+    amountVal.textContent = formatINR(P);
+    rateVal.textContent = annualRate.toFixed(1) + ' % p.a.';
+    tenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
+
+    const r = (annualRate / 100) / 12;
+    const n = years * 12;
+
+    // Standard EMI formula: E = P * r * (1 + r)^n / ((1 + r)^n - 1)
+    const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const totalPayment = emi * n;
+    const totalInterest = Math.max(0, totalPayment - P);
+
+    if (resultEmi) resultEmi.textContent = '₹ ' + Math.round(emi).toLocaleString('en-IN') + ' / mo';
+    if (principalAmountEl) principalAmountEl.textContent = formatINR(P);
+    if (totalInterestEl) totalInterestEl.textContent = formatINR(totalInterest);
+    if (totalPayableEl) totalPayableEl.textContent = formatINR(totalPayment);
+  }
+
+  amountSlider.addEventListener('input', calculate);
+  rateSlider.addEventListener('input', calculate);
+  tenureSlider.addEventListener('input', calculate);
   calculate();
 }

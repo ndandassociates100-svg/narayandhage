@@ -795,6 +795,7 @@
           <button class="calc-tab-btn" data-target="calcRetirement">🏖️ Retirement (300× Rule)</button>
           <button class="calc-tab-btn" data-target="calcEmergency">🚨 Emergency Fund (3-6×)</button>
           <button class="calc-tab-btn" data-target="calcSip">📈 SIP Wealth Compounder</button>
+          <button class="calc-tab-btn" data-target="calcHomeLoan">🏡 Home Loan EMI (LIC HFL)</button>
         </div>
 
         <div class="calc-card-container">
@@ -990,6 +991,61 @@
 
                 <a href="#health-checkup" class="btn btn-primary btn-sm" style="width: 100%;">
                   Start Disciplined SIP
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Home Loan EMI Calculator -->
+          <div class="calc-panel" id="calcHomeLoan">
+            <div class="calc-layout">
+              <div class="calc-inputs">
+                <div class="calc-input-group">
+                  <div class="calc-label-row">
+                    <label class="calc-label" for="homeLoanAmountSlider">Home Loan Amount (₹)</label>
+                    <span class="calc-value-display" id="homeLoanAmountVal">₹ 35.00 Lakh</span>
+                  </div>
+                  <input type="range" id="homeLoanAmountSlider" class="calc-slider" min="500000" max="15000000" step="100000" value="3500000">
+                </div>
+
+                <div class="calc-input-group">
+                  <div class="calc-label-row">
+                    <label class="calc-label" for="homeLoanRateSlider">Interest Rate (% p.a.)</label>
+                    <span class="calc-value-display" id="homeLoanRateVal">8.5 % p.a.</span>
+                  </div>
+                  <input type="range" id="homeLoanRateSlider" class="calc-slider" min="7.0" max="15.0" step="0.1" value="8.5">
+                </div>
+
+                <div class="calc-input-group">
+                  <div class="calc-label-row">
+                    <label class="calc-label" for="homeLoanTenureSlider">Loan Tenure (Years)</label>
+                    <span class="calc-value-display" id="homeLoanTenureVal">20 Years</span>
+                  </div>
+                  <input type="range" id="homeLoanTenureSlider" class="calc-slider" min="5" max="30" step="1" value="20">
+                </div>
+              </div>
+
+              <div class="calc-results-box">
+                <div class="calc-result-title">Monthly Home Loan EMI</div>
+                <div class="calc-result-amount" id="homeLoanResultEmi">₹ 30,373 / mo</div>
+                
+                <div class="calc-result-breakdown">
+                  <div class="breakdown-row">
+                    <span>Principal Loan Amount:</span>
+                    <strong id="homeLoanPrincipalAmount">₹ 35.00 Lakh</strong>
+                  </div>
+                  <div class="breakdown-row">
+                    <span>Total Interest Payable:</span>
+                    <strong id="homeLoanTotalInterest" style="color: #f6e27a;">₹ 37.90 Lakh</strong>
+                  </div>
+                  <div class="breakdown-row">
+                    <span>Total Amount Payable:</span>
+                    <strong id="homeLoanTotalPayable">₹ 72.90 Lakh</strong>
+                  </div>
+                </div>
+
+                <a href="#contact" class="btn btn-primary btn-sm" style="width: 100%;">
+                  Apply for LIC HFL Home Loan
                 </a>
               </div>
             </div>
@@ -1823,6 +1879,7 @@
                   <option value="Child Education Planning">Child Education Planning</option>
                   <option value="Retirement Planning">Retirement Planning</option>
                   <option value="Investments & SIP Wealth Planning">Investments &amp; SIP Wealth Planning</option>
+                  <option value="Home Loan & Property Finance (LIC HFL)">Home Loan &amp; Property Finance (LIC HFL)</option>
                   <option value="Full Portfolio Financial Health Checkup">Full Portfolio Financial Health Checkup</option>
                 </select>
               </div>
@@ -1944,6 +2001,7 @@
             <li><a href="#services" class="footer-link">Child Education Planning</a></li>
             <li><a href="#services" class="footer-link">Retirement Planning</a></li>
             <li><a href="#services" class="footer-link">Investments &amp; SIPs</a></li>
+            <li><a href="#explore" class="footer-link">Home Loans (LIC HFL)</a></li>
             <li><a href="#services" class="footer-link">Risk Management</a></li>
             <li><a href="#services" class="footer-link">Tax Planning</a></li>
           </ul>
