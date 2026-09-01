@@ -421,7 +421,7 @@ function showSuccessModal(data) {
   // Pre-fill WhatsApp message to Narayan Dhage (+91 98505 53571)
   if (waBtn) {
     const waText = encodeURIComponent(
-      `*Namaste Narayan Sir,*\n\nI have just submitted my *Financial Health Checkup* on your website.\n\n*Submission ID:* ${data.submissionId}\n*Name:* ${data.fullName}\n*Mobile:* ${data.mobileNumber}\n*Overall Fitness Score:* ${data.overallScorePercentage}\n*Goals:* ${data.financialGoals}\n\nPlease review my financial assessment when convenient.`
+      `*Hello Narayan Sir,*\n\nI have just submitted my *Financial Health Checkup* on your website.\n\n*Submission ID:* ${data.submissionId}\n*Name:* ${data.fullName}\n*Mobile:* ${data.mobileNumber}\n*Overall Fitness Score:* ${data.overallScorePercentage}\n*Goals:* ${data.financialGoals}\n\nPlease review my financial assessment when convenient.`
     );
     waBtn.href = `https://wa.me/919850553571?text=${waText}`;
   }
