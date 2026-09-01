@@ -231,7 +231,7 @@ ul, ol {
   font-weight: 600;
   font-size: clamp(0.875rem, 2vw, 0.95rem);
   padding: 0.85rem 1.65rem;
-  min-height: 48px; /* Touch target minimum */
+  min-height: 48px;
   border-radius: var(--radius-md);
   transition: all var(--transition-smooth);
   text-align: center;
@@ -1817,4 +1817,107 @@ textarea.form-control {
 
 .footer-bottom a:hover {
   color: var(--gold-300);
+}
+
+/* ==========================================================================
+   Floating WhatsApp Button Widget
+   ========================================================================== */
+
+.floating-whatsapp-widget {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: transform var(--transition-smooth);
+}
+
+.floating-whatsapp-widget:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+.whatsapp-chat-bubble {
+  background: var(--navy-900);
+  border: 1.5px solid var(--gold-500);
+  color: var(--white);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), var(--gold-glow);
+  font-family: var(--font-heading);
+  font-size: 0.825rem;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.whatsapp-chat-bubble .online-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #25d366;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #25d366;
+}
+
+.whatsapp-btn-circle {
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+  position: relative;
+  transition: all var(--transition-fast);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.whatsapp-btn-circle svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
+
+.whatsapp-pulse-ring {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 2px solid #25d366;
+  border-radius: 50%;
+  animation: wa-pulse 2.2s infinite;
+  pointer-events: none;
+}
+
+@keyframes wa-pulse {
+  0% { transform: scale(0.95); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 0.3; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .floating-whatsapp-widget {
+    bottom: 84px;
+    right: 16px;
+  }
+  .whatsapp-chat-bubble {
+    display: none;
+  }
+  .whatsapp-btn-circle {
+    width: 50px;
+    height: 50px;
+  }
+  .whatsapp-btn-circle svg {
+    width: 26px;
+    height: 26px;
+  }
 }
