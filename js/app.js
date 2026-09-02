@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCounters();
   initSmoothScroll();
   initCurrentYear();
+  initQuickInquiryForm();
 });
 
 /* Sticky Header on Scroll */
@@ -125,4 +126,61 @@ function initCurrentYear() {
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
+}
+
+/* Quick Inquiry Form Handler - Connect to WhatsApp (+91 98505 53571) */
+function initQuickInquiryForm() {
+  const form = document.getElementById('quickInquiryForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameInput = document.getElementById('contactName');
+    const mobileInput = document.getElementById('contactMobile');
+    const serviceInput = document.getElementById('contactService');
+    const messageInput = document.getElementById('contactMessage');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const mobile = mobileInput ? mobileInput.value.trim() : '';
+    const service = serviceInput ? serviceInput.value.trim() : 'General Inquiry';
+    const message = messageInput ? messageInput.value.trim() : '';
+
+    if (!name) {
+      alert('Please enter your name.');
+      nameInput?.focus();
+      return;
+    }
+
+    const cleanMobile = mobile.replace(/[^0-9]/g, '').slice(-10);
+    if (!cleanMobile || cleanMobile.length < 10) {
+      alert('Please enter a valid 10-digit mobile number.');
+      mobileInput?.focus();
+      return;
+    }
+
+    // Build structured WhatsApp message
+    let waText = `*Hello Narayan Sir,*\n\n` +
+      `I am reaching out through your website inquiry form:\n\n` +
+      `👤 *Name:* ${name}\n` +
+      `📱 *Mobile Number:* ${cleanMobile}\n` +
+      `💼 *Service of Interest:* ${service}`;
+
+    if (message) {
+      waText += `\n💬 *Message:* ${message}`;
+    } else {
+      waText += `\n💬 *Message:* I would like to get more information and schedule a consultation.`;
+    }
+
+    waText += `\n\nThank you!`;
+
+    const targetNumber = '919850553571';
+    const waUrl = `https://wa.me/${targetNumber}?text=${encodeURIComponent(waText)}`;
+
+    // Open WhatsApp in a new tab / application window
+    window.open(waUrl, '_blank');
+
+    // Reset the form
+    form.reset();
+  });
 }
